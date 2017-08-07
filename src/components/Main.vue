@@ -1,28 +1,42 @@
 <template>
-  <div class="hello">
-    <h3>Is this thing on?</h3>
-    <v-btn flat primary>Primary</v-btn>
+  <div>
+    <v-app dark>
+      <toolbar></toolbar>
+      selected weather panel
+      <v-parallax class="img" src="http://www.topindonesiaholidays.com/blog/wp-content/uploads/2015/02/Tirtagangga-rice-paddies-3.jpg"></v-parallax>
       <ul>
-        <li v-for="(user, key) in users" :key="key">
-          {{user.username}}
+        <li v-for="(con, index) in continents" :key="index">
+          <router-link to="/">{{con.name}}</router-link>
         </li>
       </ul>
+    </v-app>
   </div>
 </template>
 
 <script>
 import {db} from '../firebase'
+import Toolbar from './Toolbar'
 export default {
-  name: 'hello',
+  name: 'main',
+  data () {
+    return {
+      continents: [
+        {name: 'Africa', link: '#'},
+        {name: 'Asia', link: '#'},
+        {name: 'Australasia', link: '#'},
+        {name: 'Europe', link: '#'},
+        {name: 'North America', link: '#'},
+        {name: 'South America', link: '#'},
+      ]
+    }
+  },
   firebase: {
     users: {
       source: db.ref('user')
     }
   },
-  data () {
-    return {
-      msg: 'Welcome to Your Vue.js App'
-    }
+  components: {
+    Toolbar
   }
 }
 </script>
@@ -44,5 +58,9 @@ li {
 
 a {
   color: #42b983;
+}
+.img {
+  opacity: 0.1;
+  margin-top: 60px;
 }
 </style>
