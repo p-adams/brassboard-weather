@@ -1,7 +1,6 @@
 <template>
   <div>
     <v-app dark>
-      <toolbar></toolbar>
       selected weather panel
       <v-parallax class="img" src="http://www.topindonesiaholidays.com/blog/wp-content/uploads/2015/02/Tirtagangga-rice-paddies-3.jpg"></v-parallax>
       <ul>
@@ -15,7 +14,6 @@
 
 <script>
 import {db} from '../firebase'
-import Toolbar from './Toolbar'
 export default {
   name: 'main',
   data () {
@@ -34,9 +32,6 @@ export default {
     users: {
       source: db.ref('user')
     }
-  },
-  components: {
-    Toolbar
   }
 }
 </script>

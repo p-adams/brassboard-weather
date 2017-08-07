@@ -1,5 +1,5 @@
 <template>
-    <v-toolbar light class="primary">
+    <v-toolbar light :style="{height: '100px'}" class="primary">
         <v-toolbar-title class="white--text">
              <v-menu bottom>
             <v-btn icon slot="activator">
@@ -7,21 +7,26 @@
             </v-btn>
             <v-list>
                 <v-list-tile v-for="(item, key) in items" :key="key">
-                    <v-list-tile-title :style="{color: 'black'}">{{item.title}}</v-list-tile-title>
+                    <v-list-tile-title
+                        @click="handleRouteChange(item.name)"
+                        :style="{color: 'black'}"
+                    >
+                        {{item.title}}
+                    </v-list-tile-title>
                 </v-list-tile>
             </v-list>
         </v-menu>
-            <span
-                class="home"
-                @click="returnHome()"
-            >Brassboard Weather
-            </span>
+            Brassboard Weather
             </v-toolbar-title>
             <v-spacer></v-spacer>
             <h6>Want the most exact hyperlocal weather?</h6>
             <div class="routes">
-               login
-               join
+               <v-dialog v-model="dialog" persistent>
+                   <v-btn small slot="activator">login</v-btn>
+               </v-dialog>
+               <v-dialog v-model="dialog" persistent>
+                   <v-btn small slot="activator">join</v-btn>
+               </v-dialog>
             </div>
     </v-toolbar>
 </template>
@@ -30,16 +35,17 @@ export default {
     name: 'toolbar',
     data () {
         return {
+            dialog: false,
             items: [
-                {title: 'Home'},
-                {title: 'About'},
-                {title: 'Map'}
+                {name: 'Main', title: 'Home'},
+                {name: 'About', title: 'About'},
+                {name: 'MapComp', title: 'Map'}
             ]
         }
     },
     methods: {
-        returnHome() {
-            this.$router.push({name: 'Main'})
+        handleRouteChange(route) {
+            this.$router.push({name: route})
         }
     }
   
