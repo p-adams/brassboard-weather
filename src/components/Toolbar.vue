@@ -20,21 +20,21 @@
             </v-toolbar-title>
             <v-spacer></v-spacer>
             <h6>Want the most exact hyperlocal weather?</h6>
-            <div class="routes">
+            <div class="routes" v-if="!isSignedIn">
                <v-dialog v-model="loginDialog" persistent>
-                   <v-btn small slot="activator">login</v-btn>
+                   <v-btn small slot="activator">Sign In</v-btn>
                     <v-card>
                         <v-card-title>
-                        <span class="headline">User login</span>
+                        <span class="headline">User Sign In</span>
                         </v-card-title>
                         <v-card-text>
-                            <v-text-field label="Email" required></v-text-field>
-                            <v-text-field label="Password" type="password" required></v-text-field>
+                            <v-text-field label="Email" v-model="email" required></v-text-field>
+                            <v-text-field label="Password" type="password" v-model="password" required></v-text-field>
                         </v-card-text>
                         <v-card-actions>
                         <v-spacer></v-spacer>
                         <v-btn class="blue--text darken-1" flat @click.native="loginDialog = false">Close</v-btn>
-                        <v-btn class="blue--text darken-1" flat @click.native="loginDialog = false">Login</v-btn>
+                        <v-btn class="blue--text darken-1" flat @click="handleLogin">Login</v-btn>
                         </v-card-actions>
                     </v-card>
                </v-dialog>
@@ -45,9 +45,9 @@
                         <span class="headline">Join Brassboard</span>
                         </v-card-title>
                         <v-card-text>
-                            <v-text-field label="Email" required></v-text-field>
-                            <v-text-field label="Password" type="password" required></v-text-field>
-                            <v-text-field label="Location" type="text"></v-text-field>
+                            <v-text-field label="Email" v-model="email" required></v-text-field>
+                            <v-text-field label="Password" v-model="password" type="password" required></v-text-field>
+                            <v-text-field label="Location" v-model="location" type="text"></v-text-field>
                         </v-card-text>
                         <v-card-actions>
                         <v-spacer></v-spacer>
@@ -56,6 +56,9 @@
                         </v-card-actions>
                     </v-card>
                </v-dialog>
+            </div>
+            <div v-else>
+                <v-btn @click="signOut">Sign Out</v-btn>
             </div>
     </v-toolbar>
 </template>
@@ -66,6 +69,7 @@ export default {
     name: 'toolbar',
     data () {
         return {
+            isSignedIn: false,
             loginDialog: false,
             createDialog: false,
             items: [
@@ -82,13 +86,77 @@ export default {
         handleRouteChange(route) {
             this.$router.push({name: route})
         },
+        setLocation () {
+            let ref = db.ref('users')
+            ref.on("value", function(snapshot) {
+                 snapshot.forEach(user => {
+                     console.log(user.val())
+                 })
+            }, function (errorObject) {
+                console.log("The read failed: " + errorObject.code);
+            });
+        },
+        getCurrentUser () {
+            this.setLocation()
+            let user = firebase.auth().currentUser
+            if (user) {
+                console.log(`${user.email} is currently signed in`)
+            } else {
+                console.log('no user signed in')
+            }
+        },
+        handleSaveLocation (uuid) {
+            // save user's location in users database
+            console.log(uuid)
+            let ref = db.ref('users')
+            ref.push({
+                    uuid,
+                    location: this.location
+            })
+            this.getCurrentUser()
+            this.location = ''
+        },
         handleSave () {
             this.createDialog = false
             console.log(this.email)
-            firebase.auth().createUserWithEmailAndPassword(this.email, this.password).catch(function(error) {
-                var errorCode = error.code;
-                var errorMessage = error.message;
-                console.log(errorCode, errorMessage)  
+            firebase.auth()
+                .createUserWithEmailAndPassword(this.email, this.password)
+                .then(res => {
+                    console.log(res)
+                    this.handleSaveLocation(res.uid)
+                    this.isSignedIn = true
+                    }
+                )
+                .catch(function(error) {
+                    var errorCode = error.code;
+                    var errorMessage = error.message;
+                    console.log(errorCode)  
+            });
+            this.email = ''
+            this.password = ''
+        },
+        handleLogin () {
+            this.loginDialog = false
+            firebase.auth()
+                .signInWithEmailAndPassword(this.email, this.password)
+                .then(res => {
+                    this.isSignedIn = true
+                    this.getCurrentUser()
+                    console.log(res)
+                    }
+                )
+                .catch(function(error) {
+                    var errorCode = error.code;
+                    var errorMessage = error.message;
+                    console.log(errorCode)
+            });
+        },
+        signOut () {
+            firebase.auth().signOut().then(() => {
+                console.log('Goodbye')
+                this.isSignedIn = false
+            }).catch((error) => {
+                console.log(error)
             });
         }
     }
