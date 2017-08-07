@@ -1,6 +1,6 @@
 <template>
     <v-toolbar dark>
-        <v-toolbar-title :style="{color: '#3C916A'}">
+        <v-toolbar-title :style="{color: '#448aff'}">
              <v-menu bottom>
             <v-btn icon slot="activator">
                 <i class="fa fa-bars" aria-hidden="true"></i>

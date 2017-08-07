@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-app dark>
+    <v-app light>
       selected weather panel
       <v-parallax class="img" height="500" src="http://www.topindonesiaholidays.com/blog/wp-content/uploads/2015/02/Tirtagangga-rice-paddies-3.jpg">
        <WeatherDisplay></WeatherDisplay>
