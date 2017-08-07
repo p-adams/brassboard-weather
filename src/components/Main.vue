@@ -14,8 +14,15 @@
 
 <script>
 import {db} from '../firebase'
+import {Bus} from '../bus'
 export default {
   name: 'main',
+  created () {
+    Bus.$on('location', loc => {
+      this.location = loc
+      console.log(loc)
+    })
+  },
   data () {
     return {
       continents: [
@@ -25,7 +32,8 @@ export default {
         {name: 'Europe', link: '#'},
         {name: 'North America', link: '#'},
         {name: 'South America', link: '#'},
-      ]
+      ],
+      location: ''
     }
   },
   firebase: {

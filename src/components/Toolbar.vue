@@ -64,6 +64,7 @@
 </template>
 <script>
 import {db} from '../firebase'
+import {Bus} from '../bus'
 import firebase from 'firebase'
 export default {
     name: 'toolbar',
@@ -95,6 +96,7 @@ export default {
                          this.userLocation = u.val().location
                      }
                  })
+                 Bus.$emit('location', this.userLocation)
             },  (errorObject) => {
                 console.log("The read failed: " + errorObject.code);
             });
