@@ -30,7 +30,7 @@ export default {
   },
   firebase: {
     users: {
-      source: db.ref('user')
+      source: db.ref('users')
     }
   }
 }
