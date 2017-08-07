@@ -1,6 +1,6 @@
 <template>
-    <v-toolbar light :style="{height: '100px'}" class="primary">
-        <v-toolbar-title class="white--text">
+    <v-toolbar dark>
+        <v-toolbar-title :style="{color: '#3C916A'}">
              <v-menu bottom>
             <v-btn icon slot="activator">
                 <i class="fa fa-bars" aria-hidden="true"></i>
@@ -179,12 +179,9 @@ export default {
         color: white;
         margin: 5px;
     }
-    .routes {
-        margin-top: 15px;
-        padding: 20px;
-    }
     h6 {
-        margin-top: 32px;
+        margin-top: 20px;
+        margin-right: 5px;
         color: white;
         font-size: 14px;
     }

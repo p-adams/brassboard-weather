@@ -2,7 +2,9 @@
   <div>
     <v-app dark>
       selected weather panel
-      <v-parallax class="img" src="http://www.topindonesiaholidays.com/blog/wp-content/uploads/2015/02/Tirtagangga-rice-paddies-3.jpg"></v-parallax>
+      <v-parallax class="img" height="500" src="http://www.topindonesiaholidays.com/blog/wp-content/uploads/2015/02/Tirtagangga-rice-paddies-3.jpg">
+       <WeatherDisplay></WeatherDisplay>
+      </v-parallax>
       <ul>
         <li v-for="(con, index) in continents" :key="index">
           <router-link to="/">{{con.name}}</router-link>
@@ -15,6 +17,7 @@
 <script>
 import {db} from '../firebase'
 import {Bus} from '../bus'
+import WeatherDisplay from './WeatherDisplay'
 export default {
   name: 'main',
   created () {
@@ -36,10 +39,8 @@ export default {
       location: ''
     }
   },
-  firebase: {
-    users: {
-      source: db.ref('users')
-    }
+  components: {
+    WeatherDisplay
   }
 }
 </script>
@@ -63,7 +64,7 @@ a {
   color: #42b983;
 }
 .img {
-  opacity: 0.1;
+  opacity: 0.3;
   margin-top: 60px;
 }
 </style>
