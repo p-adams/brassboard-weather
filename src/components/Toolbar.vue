@@ -79,27 +79,30 @@ export default {
             ],
             email: '',
             password: '',
-            location: ''
+            location: '',
+            userLocation: ''
         }
     },
     methods: {
         handleRouteChange(route) {
             this.$router.push({name: route})
         },
-        setLocation () {
+        setLocation (user) {
             let ref = db.ref('users')
-            ref.on("value", function(snapshot) {
-                 snapshot.forEach(user => {
-                     console.log(user.val())
+            ref.on("value", snapshot => {
+                 snapshot.forEach(u => {
+                     if(user.uid == u.val().uuid){
+                         this.userLocation = u.val().location
+                     }
                  })
-            }, function (errorObject) {
+            },  (errorObject) => {
                 console.log("The read failed: " + errorObject.code);
             });
         },
         getCurrentUser () {
-            this.setLocation()
             let user = firebase.auth().currentUser
             if (user) {
+                this.setLocation(user)
                 console.log(`${user.email} is currently signed in`)
             } else {
                 console.log('no user signed in')
@@ -107,7 +110,6 @@ export default {
         },
         handleSaveLocation (uuid) {
             // save user's location in users database
-            console.log(uuid)
             let ref = db.ref('users')
             ref.push({
                     uuid,
@@ -118,11 +120,9 @@ export default {
         },
         handleSave () {
             this.createDialog = false
-            console.log(this.email)
             firebase.auth()
                 .createUserWithEmailAndPassword(this.email, this.password)
                 .then(res => {
-                    console.log(res)
                     this.handleSaveLocation(res.uid)
                     this.isSignedIn = true
                     }
@@ -142,7 +142,6 @@ export default {
                 .then(res => {
                     this.isSignedIn = true
                     this.getCurrentUser()
-                    console.log(res)
                     }
                 )
                 .catch(function(error) {
@@ -150,11 +149,14 @@ export default {
                     var errorMessage = error.message;
                     console.log(errorCode)
             });
+            this.email = ''
+            this.password = ''
         },
         signOut () {
             firebase.auth().signOut().then(() => {
                 console.log('Goodbye')
                 this.isSignedIn = false
+                this.userLocation = ''
             }).catch((error) => {
                 console.log(error)
             });
