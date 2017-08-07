@@ -47,12 +47,12 @@
                         <v-card-text>
                             <v-text-field label="Email" v-model="email" required></v-text-field>
                             <v-text-field label="Password" v-model="password" type="password" required></v-text-field>
-                            <v-text-field label="Location" v-model="location" type="text"></v-text-field>
+                            <v-text-field label="Location" v-model="location" type="text" required></v-text-field>
                         </v-card-text>
                         <v-card-actions>
                         <v-spacer></v-spacer>
                         <v-btn class="blue--text darken-1" flat @click.native="createDialog = false">Close</v-btn>
-                        <v-btn class="blue--text darken-1" flat @click="handleSave">Save</v-btn>
+                        <v-btn class="blue--text darken-1" flat @click="handleSave" :disabled="emptyInput">Save</v-btn>
                         </v-card-actions>
                     </v-card>
                </v-dialog>
@@ -122,18 +122,17 @@ export default {
         },
         handleSave () {
             this.createDialog = false
-            firebase.auth()
-                .createUserWithEmailAndPassword(this.email, this.password)
-                .then(res => {
-                    this.handleSaveLocation(res.uid)
-                    this.isSignedIn = true
-                    }
-                )
-                .catch(function(error) {
-                    var errorCode = error.code;
-                    var errorMessage = error.message;
-                    console.log(errorCode)  
-            });
+                firebase.auth()
+                    .createUserWithEmailAndPassword(this.email, this.password)
+                    .then(res => {
+                        this.handleSaveLocation(res.uid)
+                        this.isSignedIn = true
+                    })
+                    .catch(function(error) {
+                        var errorCode = error.code;
+                        var errorMessage = error.message;
+                        console.log(errorCode)  
+                });
             this.email = ''
             this.password = ''
         },
@@ -162,6 +161,11 @@ export default {
             }).catch((error) => {
                 console.log(error)
             });
+        }
+    },
+    computed: {
+        emptyInput () {
+            return this.password.length === 0 || this.email.length === 0 || this.location.length === 0
         }
     }
   
