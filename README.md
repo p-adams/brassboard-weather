@@ -3,10 +3,15 @@
 > a minimal PoC for the popular weather app MetaWeather
 
 
-#### demo
+#### Usage
+
+`git clone https://github.com/p-adams/brassboard-weather.com`
+`cd brassboard-weather.com`
+`npm install`
+`npm run dev`
 
 
-#### supported features
+#### Supported features
 <ul>
     <li>User login/join</li>
     <li>Registered user's location persists</li>
@@ -15,7 +20,7 @@
 </ul>
 
 
-#### todo
+#### Todo
 <ul>
     <li>Add weather icons</li>
     <li>Add panel featuring weather from selected cities/countries</li>
