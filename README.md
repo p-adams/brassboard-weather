@@ -4,13 +4,18 @@
 
 
 #### Usage
+clone the repo
 
 `git clone https://github.com/p-adams/brassboard-weather.com`
-clone the repo
+
 `cd brassboard-weather.com`
+
 install dependencies
+
 `npm install`
+
 run app
+
 `npm run dev`
 
 
