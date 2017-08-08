@@ -158,6 +158,7 @@ export default {
                 console.log('Goodbye')
                 this.isSignedIn = false
                 this.userLocation = ''
+                Bus.$emit('reset', 'San Francisco')
             }).catch((error) => {
                 console.log(error)
             });
@@ -177,7 +178,7 @@ export default {
     }
     .link {
         color: white;
-        margin: 5px;
+        margin: 2px;
     }
     h6 {
         margin-top: 20px;

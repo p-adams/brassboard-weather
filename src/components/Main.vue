@@ -1,7 +1,17 @@
 <template>
   <div>
     <v-app light>
-      selected weather panel
+      <v-layout>
+       <v-flex xs12 sm6 offset-sm3>
+            <v-text-field
+              v-model="city"
+              name="input-2"
+              label="Search location by city name"
+              class="mt-5"
+              @keyup.enter="getWeather"
+            ></v-text-field>
+        </v-flex>
+      </v-layout>
       <v-parallax class="img" height="500" src="http://www.topindonesiaholidays.com/blog/wp-content/uploads/2015/02/Tirtagangga-rice-paddies-3.jpg">
        <WeatherDisplay></WeatherDisplay>
       </v-parallax>
@@ -16,16 +26,11 @@
 
 <script>
 import {db} from '../firebase'
-import {Bus} from '../bus'
 import WeatherDisplay from './WeatherDisplay'
+import {Bus} from '../bus'
+import axios from 'axios'
 export default {
   name: 'main',
-  created () {
-    Bus.$on('location', loc => {
-      this.location = loc
-      console.log(loc)
-    })
-  },
   data () {
     return {
       continents: [
@@ -36,8 +41,22 @@ export default {
         {name: 'North America', link: '#'},
         {name: 'South America', link: '#'},
       ],
+      city: '',
       location: ''
     }
+  },
+  methods: {
+      getWeather() {
+         axios.get(`http://api.openweathermap.org/data/2.5/weather?q=${this.city}&units=imperial&APPID=99e9435258bbe95f5b8fd0df39c49667`)
+                .then(res => {
+                    console.log(res)
+                    Bus.$emit('search', res)
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        this.city = ''
+      }
   },
   components: {
     WeatherDisplay
@@ -64,7 +83,9 @@ a {
   color: #42b983;
 }
 .img {
-  opacity: 0.3;
-  margin-top: 60px;
+  opacity: 0.5;
+}
+.search-button {
+  margin-top: -10px;
 }
 </style>

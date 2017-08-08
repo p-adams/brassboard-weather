@@ -1,7 +1,7 @@
 <template>
   <div>
-      <v-app dark>
-          Map
+      <v-app light>
+          Map Display Component
       </v-app>
   </div>
 </template>
